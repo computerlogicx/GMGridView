@@ -57,6 +57,7 @@
 @synthesize deleteButtonIcon = _deleteButtonIcon;
 @synthesize deleteButtonOffset;
 @synthesize reuseIdentifier;
+@synthesize shakeOnEdit = _shakeOnEdit;
 
 //////////////////////////////////////////////////////////////
 #pragma mark Constructors
@@ -83,6 +84,8 @@
         self.deleteButton.alpha = 0;
         [self addSubview:deleteButton];
         [deleteButton addTarget:self action:@selector(actionDelete) forControlEvents:UIControlEventTouchUpInside];
+		
+		self.shakeOnEdit = YES;
     }
     return self;
 }
@@ -185,7 +188,11 @@
         }
 
         self.contentView.userInteractionEnabled = !editing;
-        [self shakeStatus:editing];
+        
+		if (self.shakeOnEdit)
+		{
+			[self shakeStatus:editing];
+		}
     }
 }
 
@@ -261,7 +268,7 @@
 
 - (void)shake:(BOOL)on
 {
-    if ((on && !self.inShakingMode) || (!on && self.inShakingMode)) 
+    if (self.shakeOnEdit && ((on && !self.inShakingMode) || (!on && self.inShakingMode))) 
     {
         [self.contentView shakeStatus:on];
         _inShakingMode = on;
