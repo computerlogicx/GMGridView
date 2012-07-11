@@ -33,7 +33,8 @@
 @protocol GMGridViewLayoutStrategy;
 
 
-typedef enum {
+typedef enum
+{
     GMGridViewLayoutVertical = 0,
     GMGridViewLayoutHorizontal,
     GMGridViewLayoutHorizontalPagedLTR,   // LTR: left to right
@@ -48,7 +49,7 @@ typedef enum {
 
 @interface GMGridViewLayoutStrategyFactory : NSObject
 
-+ (id<GMGridViewLayoutStrategy>)strategyFromType:(GMGridViewLayoutStrategyType)type;
++ (id <GMGridViewLayoutStrategy>)strategyFromType:(GMGridViewLayoutStrategyType)type;
 
 @end
 
@@ -71,7 +72,9 @@ typedef enum {
 
 // Fetching the results
 - (CGSize)contentSize;
+
 - (CGPoint)originForItemAtPosition:(NSInteger)position;
+
 - (NSInteger)itemPositionFromLocation:(CGPoint)location;
 
 - (NSRange)rangeOfPositionsInBoundsFromOffset:(CGPoint)offset;
@@ -85,16 +88,16 @@ typedef enum {
 
 @interface GMGridViewLayoutStrategyBase : NSObject
 {
-    @protected
+@protected
     // All of these vars should be set in the init method
     GMGridViewLayoutStrategyType _type;
-    
+
     // All of these vars should be set in the setup method of the child class
     CGSize _itemSize;
     NSInteger _itemSpacing;
     UIEdgeInsets _minEdgeInsets;
     BOOL _centeredGrid;
-    
+
     // All of these vars should be set in the rebase method of the child class
     NSInteger _itemCount;
     UIEdgeInsets _edgeInsets;
@@ -128,7 +131,7 @@ typedef enum {
 
 @interface GMGridViewLayoutVerticalStrategy : GMGridViewLayoutStrategyBase <GMGridViewLayoutStrategy>
 {
-    @protected
+@protected
     NSInteger _numberOfItemsPerRow;
 }
 
@@ -142,7 +145,7 @@ typedef enum {
 
 @interface GMGridViewLayoutHorizontalStrategy : GMGridViewLayoutStrategyBase <GMGridViewLayoutStrategy>
 {
-    @protected
+@protected
     NSInteger _numberOfItemsPerColumn;
 }
 
@@ -157,7 +160,7 @@ typedef enum {
 
 @interface GMGridViewLayoutHorizontalPagedStrategy : GMGridViewLayoutHorizontalStrategy
 {
-    @protected
+@protected
     NSInteger _numberOfItemsPerRow;
     NSInteger _numberOfItemsPerPage;
     NSInteger _numberOfPages;
@@ -170,7 +173,9 @@ typedef enum {
 
 // Only these 3 methods have be reimplemented by child classes to change the LTR and TTB kind of behavior
 - (NSInteger)positionForItemAtColumn:(NSInteger)column row:(NSInteger)row page:(NSInteger)page;
+
 - (NSInteger)columnForItemAtPosition:(NSInteger)position;
+
 - (NSInteger)rowForItemAtPosition:(NSInteger)position;
 
 @end

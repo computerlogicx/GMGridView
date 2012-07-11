@@ -58,6 +58,4 @@
 #define GMGV_INVALID_POSITION -1
 
 
-
-
 #endif

@@ -44,17 +44,17 @@ typedef enum
 
 typedef enum
 {
-	GMGridViewScrollPositionNone,
-	GMGridViewScrollPositionTop,
-	GMGridViewScrollPositionMiddle,
-	GMGridViewScrollPositionBottom
+    GMGridViewScrollPositionNone,
+    GMGridViewScrollPositionTop,
+    GMGridViewScrollPositionMiddle,
+    GMGridViewScrollPositionBottom
 } GMGridViewScrollPosition;
 
 typedef enum
 {
     GMGridViewItemAnimationNone = 0,
     GMGridViewItemAnimationFade,
-    GMGridViewItemAnimationScroll = 1<<7 // scroll to the item before showing the animation
+    GMGridViewItemAnimationScroll = 1 << 7 // scroll to the item before showing the animation
 } GMGridViewItemAnimation;
 
 //////////////////////////////////////////////////////////////
@@ -64,13 +64,13 @@ typedef enum
 @interface GMGridView : UIScrollView
 
 // Delegates
-@property (nonatomic, gm_weak) IBOutlet NSObject<GMGridViewDataSource> *dataSource;                    // Required
-@property (nonatomic, gm_weak) IBOutlet NSObject<GMGridViewActionDelegate> *actionDelegate;            // Optional - to get taps callback & deleting item
-@property (nonatomic, gm_weak) IBOutlet NSObject<GMGridViewSortingDelegate> *sortingDelegate;          // Optional - to enable sorting
-@property (nonatomic, gm_weak) IBOutlet NSObject<GMGridViewTransformationDelegate> *transformDelegate; // Optional - to enable fullsize mode
+@property (nonatomic, gm_weak) IBOutlet NSObject <GMGridViewDataSource> *dataSource;                    // Required
+@property (nonatomic, gm_weak) IBOutlet NSObject <GMGridViewActionDelegate> *actionDelegate;            // Optional - to get taps callback & deleting item
+@property (nonatomic, gm_weak) IBOutlet NSObject <GMGridViewSortingDelegate> *sortingDelegate;          // Optional - to enable sorting
+@property (nonatomic, gm_weak) IBOutlet NSObject <GMGridViewTransformationDelegate> *transformDelegate; // Optional - to enable fullsize mode
 
 // Layout Strategy
-@property (nonatomic, strong) IBOutlet id<GMGridViewLayoutStrategy> layoutStrategy; // Default is GMGridViewLayoutVerticalStrategy
+@property (nonatomic, strong) IBOutlet id <GMGridViewLayoutStrategy> layoutStrategy; // Default is GMGridViewLayoutVerticalStrategy
 
 // Editing Mode
 @property (nonatomic, getter=isEditing) BOOL editing; // Default is NO - When set to YES, all gestures are disabled and delete buttons shows up on cells
@@ -96,14 +96,23 @@ typedef enum
 
 // Actions
 - (void)reloadData;
+
 - (void)insertObjectAtIndex:(NSInteger)index animated:(BOOL)animated;
+
 - (void)insertObjectAtIndex:(NSInteger)index withAnimation:(GMGridViewItemAnimation)animation;
+
 - (void)removeObjectAtIndex:(NSInteger)index animated:(BOOL)animated;
+
 - (void)removeObjectAtIndex:(NSInteger)index withAnimation:(GMGridViewItemAnimation)animation;
+
 - (void)reloadObjectAtIndex:(NSInteger)index animated:(BOOL)animated;
+
 - (void)reloadObjectAtIndex:(NSInteger)index withAnimation:(GMGridViewItemAnimation)animation;
+
 - (void)swapObjectAtIndex:(NSInteger)index1 withObjectAtIndex:(NSInteger)index2 animated:(BOOL)animated;
+
 - (void)swapObjectAtIndex:(NSInteger)index1 withObjectAtIndex:(NSInteger)index2 withAnimation:(GMGridViewItemAnimation)animation;
+
 - (void)scrollToObjectAtIndex:(NSInteger)index atScrollPosition:(GMGridViewScrollPosition)scrollPosition animated:(BOOL)animated;
 
 // Force the grid to update properties in an (probably) animated way.
@@ -121,7 +130,9 @@ typedef enum
 @required
 // Populating subview items 
 - (NSInteger)numberOfItemsInGMGridView:(GMGridView *)gridView;
+
 - (CGSize)GMGridView:(GMGridView *)gridView sizeForItemsInInterfaceOrientation:(UIInterfaceOrientation)orientation;
+
 - (GMGridViewCell *)GMGridView:(GMGridView *)gridView cellForItemAtIndex:(NSInteger)index;
 
 @optional
@@ -143,6 +154,7 @@ typedef enum
 @optional
 // Tap on space without any items
 - (void)GMGridViewDidTapOnEmptySpace:(GMGridView *)gridView;
+
 // Called when the delete-button has been pressed. Required to enable editing mode.
 // This method wont delete the cell automatically. Call the delete method of the gridView when appropriate.
 - (void)GMGridView:(GMGridView *)gridView processDeleteActionForItemAtIndex:(NSInteger)index;
@@ -159,12 +171,15 @@ typedef enum
 @required
 // Item moved - right place to update the data structure
 - (void)GMGridView:(GMGridView *)gridView moveItemAtIndex:(NSInteger)oldIndex toIndex:(NSInteger)newIndex;
+
 - (void)GMGridView:(GMGridView *)gridView exchangeItemAtIndex:(NSInteger)index1 withItemAtIndex:(NSInteger)index2;
 
 @optional
 // Sorting started/ended - indexes are not specified on purpose (not the right place to update data structure)
 - (void)GMGridView:(GMGridView *)gridView didStartMovingCell:(GMGridViewCell *)cell;
+
 - (void)GMGridView:(GMGridView *)gridView didEndMovingCell:(GMGridViewCell *)cell;
+
 // Enable/Disable the shaking behavior of an item being moved
 - (BOOL)GMGridView:(GMGridView *)gridView shouldAllowShakingBehaviorWhenMovingCell:(GMGridViewCell *)view atIndex:(NSInteger)index;
 
@@ -179,12 +194,15 @@ typedef enum
 @required
 // Fullsize
 - (CGSize)GMGridView:(GMGridView *)gridView sizeInFullSizeForCell:(GMGridViewCell *)cell atIndex:(NSInteger)index inInterfaceOrientation:(UIInterfaceOrientation)orientation;
+
 - (UIView *)GMGridView:(GMGridView *)gridView fullSizeViewForCell:(GMGridViewCell *)cell atIndex:(NSInteger)index;
 
 // Transformation (pinch, drag, rotate) of the item
 @optional
 - (void)GMGridView:(GMGridView *)gridView didStartTransformingCell:(GMGridViewCell *)cell;
+
 - (void)GMGridView:(GMGridView *)gridView didEnterFullSizeForCell:(GMGridViewCell *)cell;
+
 - (void)GMGridView:(GMGridView *)gridView didEndTransformingCell:(GMGridViewCell *)cell;
 
 @end

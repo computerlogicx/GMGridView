@@ -32,6 +32,7 @@
 @interface UIGestureRecognizer (GMGridViewAdditions)
 
 - (void)end;
+
 - (BOOL)hasRecognizedValidGesture;
 
 @end

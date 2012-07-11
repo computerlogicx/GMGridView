@@ -11,44 +11,49 @@
 #import "GMGridView.h"
 
 // Sections
-typedef enum {
+typedef enum
+{
     OptionSectionGeneral = 0,
     OptionSectionLayout,
     OptionSectionSorting,
     OptionSectionDebug,
-    
+
     OptionSectionsCount
 } OptionsTypeSections;
 
 // General
-typedef enum {
+typedef enum
+{
     OptionTypeGeneralEditing = 0,
-    
+
     OptionGeneralCount
 } OptionsTypeGeneral;
 
 // Options layout
-typedef enum {
+typedef enum
+{
     OptionTypeLayoutStrategy = 0,
     OptionsTypeLayoutSpacing,
     OptionsTypeLayoutCenter,
     OptionsTypeLayoutMinInsets,
-    
+
     OptionLayoutCount
 } OptionsTypeLayout;
 
 // Options sorting
-typedef enum {
+typedef enum
+{
     OptionTypeSortingStyle = 0,
-    
+
     OptionSortingCount
 } OptionsTypeSorting;
 
 // Options debug
-typedef enum {
+typedef enum
+{
     OptionTypeDebugGridBackground = 0,
     OptionTypeDebugReload,
-    
+
     OptionDebugCount
 } OptionsTypeDebug;
 
@@ -58,11 +63,17 @@ typedef enum {
 }
 
 - (void)editingSwitchChanged:(UISwitch *)control;
+
 - (void)sortStyleSegmentedControlChanged:(UISegmentedControl *)control;
+
 - (void)layoutCenterSwitchChanged:(UISwitch *)control;
+
 - (void)layoutSpacingSliderChanged:(UISlider *)control;
+
 - (void)layoutInsetsSliderChanged:(UISlider *)control;
+
 - (void)debugGridBackgroundSwitchChanged:(UISwitch *)control;
+
 - (void)debugReloadButtonPressed:(UIButton *)control;
 
 @end
@@ -81,7 +92,7 @@ typedef enum {
 
 - (id)init
 {
-    if ((self = [super init])) 
+    if ((self = [super init]))
     {
         self.title = @"Options";
     }
@@ -96,7 +107,7 @@ typedef enum {
 {
     UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     tableView.dataSource = self;
-    tableView.delegate   = self;
+    tableView.delegate = self;
     self.view = tableView;
     _tableView = tableView;
 }
@@ -133,17 +144,17 @@ typedef enum {
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     CGFloat height = 45;
-    
-    if ([indexPath section] == OptionSectionLayout) 
+
+    if ([indexPath section] == OptionSectionLayout)
     {
-        switch ([indexPath row]) 
+        switch ([indexPath row])
         {
             case OptionTypeLayoutStrategy:
                 height = 160;
                 break;
         }
     }
-    
+
     return height;
 }
 
@@ -155,8 +166,8 @@ typedef enum {
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     NSString *title = @"Unknown";
-    
-    switch (section) 
+
+    switch (section)
     {
         case OptionSectionGeneral:
             title = @"General";
@@ -171,15 +182,15 @@ typedef enum {
             title = @"Debug";
             break;
     }
-    
+
     return title;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSInteger count = 0;
-    
-    switch (section) 
+
+    switch (section)
     {
         case OptionSectionGeneral:
             count = OptionGeneralCount;
@@ -194,7 +205,7 @@ typedef enum {
             count = OptionDebugCount;
             break;
     }
-    
+
     return count;
 }
 
@@ -202,45 +213,45 @@ typedef enum {
 {
     static NSString *cellIdentifier = @"cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    
-    if (!cell) 
+
+    if (!cell)
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
 
-    
+
     if ([indexPath section] == OptionSectionGeneral)
     {
-        switch ([indexPath row]) 
+        switch ([indexPath row])
         {
             case OptionTypeGeneralEditing:
             {
                 cell.detailTextLabel.text = @"Editing";
-                
+
                 UISwitch *editingSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 100, 30)];
                 [editingSwitch addTarget:self action:@selector(editingSwitchChanged:) forControlEvents:UIControlEventValueChanged];
                 editingSwitch.on = self.gridView.isEditing;
-                
+
                 cell.accessoryView = editingSwitch;
             }
         }
     }
-    else if ([indexPath section] == OptionSectionLayout) 
+    else if ([indexPath section] == OptionSectionLayout)
     {
-        switch ([indexPath row]) 
+        switch ([indexPath row])
         {
             case OptionTypeLayoutStrategy:
             {
                 cell.detailTextLabel.text = @"";
-                
+
                 UIPickerView *pickerView = [[UIPickerView alloc] initWithFrame:cell.contentView.bounds];
                 pickerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
                 pickerView.showsSelectionIndicator = YES;
                 pickerView.delegate = self;
                 pickerView.dataSource = self;
-                
-                switch ([self.gridView.layoutStrategy type]) 
+
+                switch ([self.gridView.layoutStrategy type])
                 {
                     case GMGridViewLayoutHorizontalPagedTTB:
                         [pickerView selectRow:3 inComponent:0 animated:YES];
@@ -259,47 +270,47 @@ typedef enum {
 
                 cell.contentView.clipsToBounds = YES;
                 [cell.contentView addSubview:pickerView];
-                
+
                 break;
             }
             case OptionsTypeLayoutCenter:
             {
                 cell.detailTextLabel.text = @"Center";
-                
+
                 UISwitch *centerSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 100, 30)];
                 [centerSwitch addTarget:self action:@selector(layoutCenterSwitchChanged:) forControlEvents:UIControlEventValueChanged];
                 centerSwitch.on = self.gridView.centerGrid;
-                
+
                 cell.accessoryView = centerSwitch;
-                
+
                 break;
             }
             case OptionsTypeLayoutSpacing:
             {
                 cell.detailTextLabel.text = @"Spacing";
-                
+
                 UISlider *slider = [[UISlider alloc] initWithFrame:CGRectMake(0, 0, 200, 30)];
                 [slider setMinimumValue:0];
                 [slider setMaximumValue:20];
                 [slider setValue:self.gridView.itemSpacing];
                 [slider setContinuous:NO];
                 [slider addTarget:self action:@selector(layoutSpacingSliderChanged:) forControlEvents:UIControlEventValueChanged];
-                
+
                 cell.accessoryView = slider;
-                
+
                 break;
             }
             case OptionsTypeLayoutMinInsets:
             {
                 cell.detailTextLabel.text = @"Edge insets";
-                
+
                 UISlider *slider = [[UISlider alloc] initWithFrame:CGRectMake(0, 0, 200, 30)];
                 [slider setMinimumValue:0];
                 [slider setMaximumValue:50];
                 [slider setValue:self.gridView.minEdgeInsets.top];
                 [slider setContinuous:NO];
                 [slider addTarget:self action:@selector(layoutInsetsSliderChanged:) forControlEvents:UIControlEventValueChanged];
-                
+
                 cell.accessoryView = slider;
                 break;
             }
@@ -307,53 +318,53 @@ typedef enum {
     }
     else if ([indexPath section] == OptionSectionSorting)
     {
-        switch ([indexPath row]) 
+        switch ([indexPath row])
         {
             case OptionTypeSortingStyle:
             {
                 cell.detailTextLabel.text = @"Style";
-                
+
                 UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Swap", @"Push", nil]];
                 segmentedControl.frame = CGRectMake(0, 0, 150, 30);
                 [segmentedControl addTarget:self action:@selector(sortStyleSegmentedControlChanged:) forControlEvents:UIControlEventValueChanged];
                 segmentedControl.selectedSegmentIndex = (self.gridView.style == GMGridViewStylePush) ? 1 : 0;
-                
+
                 cell.accessoryView = segmentedControl;
-                
+
                 break;
             }
         }
     }
     else if ([indexPath section] == OptionSectionDebug)
     {
-        switch ([indexPath row]) 
+        switch ([indexPath row])
         {
             case OptionTypeDebugGridBackground:
             {
                 cell.detailTextLabel.text = @"Grid background color";
-                
+
                 UISwitch *backgroundSwitch = [[UISwitch alloc] init];
                 [backgroundSwitch addTarget:self action:@selector(debugGridBackgroundSwitchChanged:) forControlEvents:UIControlEventValueChanged];
                 backgroundSwitch.on = (self.gridView.backgroundColor != [UIColor clearColor]);
                 [backgroundSwitch sizeToFit];
-                
+
                 cell.accessoryView = backgroundSwitch;
-                
+
                 break;
             }
             case OptionTypeDebugReload:
             {
                 cell.detailTextLabel.text = @"Reload from Datasource";
-                
+
                 UIButton *reloadButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
                 [reloadButton setReversesTitleShadowWhenHighlighted:YES];
                 [reloadButton setTitleColor:[UIColor redColor] forState:UIControlEventTouchUpInside];
                 [reloadButton setTitle:@"Reload" forState:UIControlStateNormal];
                 [reloadButton addTarget:self action:@selector(debugReloadButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
                 [reloadButton sizeToFit];
-                
+
                 cell.accessoryView = reloadButton;
-                
+
                 break;
             }
         }
@@ -375,7 +386,7 @@ typedef enum {
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
-    switch (row) 
+    switch (row)
     {
         case 1:
             self.gridView.layoutStrategy = [GMGridViewLayoutStrategyFactory strategyFromType:GMGridViewLayoutHorizontal];
@@ -407,8 +418,9 @@ typedef enum {
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
     NSString *title = nil;
-    
-    switch (row) {
+
+    switch (row)
+    {
         case 0:
             title = @"Vertical strategy";
             break;
@@ -425,7 +437,7 @@ typedef enum {
             title = @"Unknown";
             break;
     }
-    
+
     return title;
 }
 
@@ -442,7 +454,7 @@ typedef enum {
 
 - (void)sortStyleSegmentedControlChanged:(UISegmentedControl *)control
 {
-    switch (control.selectedSegmentIndex) 
+    switch (control.selectedSegmentIndex)
     {
         case 1:
             self.gridView.style = GMGridViewStylePush;

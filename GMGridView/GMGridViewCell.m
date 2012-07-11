@@ -33,7 +33,7 @@
 #pragma mark - Interface Private
 //////////////////////////////////////////////////////////////
 
-@interface GMGridViewCell(Private)
+@interface GMGridViewCell (Private)
 
 - (void)actionDelete;
 
@@ -70,11 +70,11 @@
 
 - (id)initWithFrame:(CGRect)frame
 {
-    if ((self = [super initWithFrame:frame])) 
+    if ((self = [super initWithFrame:frame]))
     {
         self.autoresizesSubviews = !YES;
         self.editing = NO;
-        
+
         UIButton *deleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
         self.deleteButton = deleteButton;
         [self.deleteButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
@@ -84,8 +84,8 @@
         self.deleteButton.alpha = 0;
         [self addSubview:deleteButton];
         [deleteButton addTarget:self action:@selector(actionDelete) forControlEvents:UIControlEventTouchUpInside];
-		
-		self.shakeOnEdit = YES;
+
+        self.shakeOnEdit = YES;
     }
     return self;
 }
@@ -97,10 +97,10 @@
 
 - (void)layoutSubviews
 {
-    if(self.inFullSizeMode)
+    if (self.inFullSizeMode)
     {
-        CGPoint origin = CGPointMake((self.bounds.size.width - self.fullSize.width) / 2, 
-                                     (self.bounds.size.height - self.fullSize.height) / 2);
+        CGPoint origin = CGPointMake((self.bounds.size.width - self.fullSize.width) / 2,
+                (self.bounds.size.height - self.fullSize.height) / 2);
         self.fullSizeView.frame = CGRectMake(origin.x, origin.y, self.fullSize.width, self.fullSize.height);
     }
     else
@@ -117,8 +117,8 @@
 {
     [self shake:NO];
     [self.contentView removeFromSuperview];
-    
-    if(self.contentView)
+
+    if (self.contentView)
     {
         contentView.frame = self.contentView.frame;
     }
@@ -126,18 +126,18 @@
     {
         contentView.frame = self.bounds;
     }
-    
+
     _contentView = contentView;
-    
+
     self.contentView.autoresizingMask = UIViewAutoresizingNone;
     [self addSubview:self.contentView];
-    
+
     [self bringSubviewToFront:self.deleteButton];
 }
 
 - (void)setFullSizeView:(UIView *)fullSizeView
 {
-    if ([self isInFullSizeMode]) 
+    if ([self isInFullSizeMode])
     {
         fullSizeView.frame = _fullSizeView.frame;
         fullSizeView.alpha = _fullSizeView.alpha;
@@ -147,22 +147,22 @@
         fullSizeView.frame = self.bounds;
         fullSizeView.alpha = 0;
     }
-    
+
     self.defaultFullsizeViewResizingMask = fullSizeView.autoresizingMask | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-    
+
     fullSizeView.autoresizingMask = _fullSizeView.autoresizingMask;
-    
+
     [_fullSizeView removeFromSuperview];
     _fullSizeView = fullSizeView;
     [self addSubview:_fullSizeView];
-    
+
     [self bringSubviewToFront:self.deleteButton];
 }
 
 - (void)setFullSize:(CGSize)fullSize
 {
     _fullSize = fullSize;
-    
+
     [self setNeedsLayout];
 }
 
@@ -173,35 +173,40 @@
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated
 {
-    if (editing != _editing) {
+    if (editing != _editing)
+    {
         _editing = editing;
-        if (animated) {
+        if (animated)
+        {
             [UIView animateWithDuration:0.2f
                                   delay:0.f
                                 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationCurveEaseOut
-                             animations:^{
+                             animations:^
+                             {
                                  self.deleteButton.alpha = editing ? 1.f : 0.f;
                              }
                              completion:nil];
-        }else {
+        }
+        else
+        {
             self.deleteButton.alpha = editing ? 1.f : 0.f;
         }
 
         self.contentView.userInteractionEnabled = !editing;
-        
-		if (self.shakeOnEdit)
-		{
-			[self shakeStatus:editing];
-		}
+
+        if (self.shakeOnEdit)
+        {
+            [self shakeStatus:editing];
+        }
     }
 }
 
 - (void)setDeleteButtonOffset:(CGPoint)offset
 {
-    self.deleteButton.frame = CGRectMake(offset.x, 
-                                         offset.y, 
-                                         self.deleteButton.frame.size.width, 
-                                         self.deleteButton.frame.size.height);
+    self.deleteButton.frame = CGRectMake(offset.x,
+            offset.y,
+            self.deleteButton.frame.size.width,
+            self.deleteButton.frame.size.height);
 }
 
 - (CGPoint)deleteButtonOffset
@@ -212,29 +217,29 @@
 - (void)setDeleteButtonIcon:(UIImage *)deleteButtonIcon
 {
     [self.deleteButton setImage:deleteButtonIcon forState:UIControlStateNormal];
-    
-    if (deleteButtonIcon) 
+
+    if (deleteButtonIcon)
     {
-        self.deleteButton.frame = CGRectMake(self.deleteButton.frame.origin.x, 
-                                             self.deleteButton.frame.origin.y, 
-                                             deleteButtonIcon.size.width, 
-                                             deleteButtonIcon.size.height);
-        
+        self.deleteButton.frame = CGRectMake(self.deleteButton.frame.origin.x,
+                self.deleteButton.frame.origin.y,
+                deleteButtonIcon.size.width,
+                deleteButtonIcon.size.height);
+
         [self.deleteButton setTitle:nil forState:UIControlStateNormal];
         [self.deleteButton setBackgroundColor:[UIColor clearColor]];
     }
     else
     {
-        self.deleteButton.frame = CGRectMake(self.deleteButton.frame.origin.x, 
-                                             self.deleteButton.frame.origin.y, 
-                                             35, 
-                                             35);
-        
+        self.deleteButton.frame = CGRectMake(self.deleteButton.frame.origin.x,
+                self.deleteButton.frame.origin.y,
+                35,
+                35);
+
         [self.deleteButton setTitle:@"X" forState:UIControlStateNormal];
         [self.deleteButton setBackgroundColor:[UIColor lightGrayColor]];
     }
-    
-    
+
+
 }
 
 - (UIImage *)deleteButtonIcon
@@ -248,7 +253,7 @@
 
 - (void)actionDelete
 {
-    if (self.deleteBlock) 
+    if (self.deleteBlock)
     {
         self.deleteBlock(self);
     }
@@ -268,7 +273,7 @@
 
 - (void)shake:(BOOL)on
 {
-    if (self.shakeOnEdit && ((on && !self.inShakingMode) || (!on && self.inShakingMode))) 
+    if (self.shakeOnEdit && ((on && !self.inShakingMode) || (!on && self.inShakingMode)))
     {
         [self.contentView shakeStatus:on];
         _inShakingMode = on;
@@ -277,26 +282,28 @@
 
 - (void)switchToFullSizeMode:(BOOL)fullSizeEnabled
 {
-    if (fullSizeEnabled) 
+    if (fullSizeEnabled)
     {
         self.fullSizeView.autoresizingMask = self.defaultFullsizeViewResizingMask;
-        
+
         CGPoint center = self.fullSizeView.center;
         self.fullSizeView.frame = CGRectMake(self.fullSizeView.frame.origin.x, self.fullSizeView.frame.origin.y, self.fullSize.width, self.fullSize.height);
         self.fullSizeView.center = center;
-        
+
         _inFullSizeMode = YES;
-        
+
         self.fullSizeView.alpha = MAX(self.fullSizeView.alpha, self.contentView.alpha);
-        self.contentView.alpha  = 0;
-        
-        [UIView animateWithDuration:0.3 
-                         animations:^{
+        self.contentView.alpha = 0;
+
+        [UIView animateWithDuration:0.3
+                         animations:^
+                         {
                              self.fullSizeView.alpha = 1;
                              self.fullSizeView.frame = CGRectMake(self.fullSizeView.frame.origin.x, self.fullSizeView.frame.origin.y, self.fullSize.width, self.fullSize.height);
                              self.fullSizeView.center = center;
-                         } 
-                         completion:^(BOOL finished){
+                         }
+                         completion:^(BOOL finished)
+                         {
                              [self setNeedsLayout];
                          }
         ];
@@ -304,34 +311,36 @@
     else
     {
         self.fullSizeView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        
+
         _inFullSizeMode = NO;
         self.fullSizeView.alpha = 0;
-        self.contentView.alpha  = 0.6;
-        
-        [UIView animateWithDuration:0.3 
-                         animations:^{
-                             self.contentView.alpha  = 1;
+        self.contentView.alpha = 0.6;
+
+        [UIView animateWithDuration:0.3
+                         animations:^
+                         {
+                             self.contentView.alpha = 1;
                              self.fullSizeView.frame = self.bounds;
-                         } 
-                         completion:^(BOOL finished){
+                         }
+                         completion:^(BOOL finished)
+                         {
                              [self setNeedsLayout];
                          }
-         ];
+        ];
     }
 }
 
 - (void)stepToFullsizeWithAlpha:(CGFloat)alpha
 {
     return; // not supported anymore - to be fixed
-    
-    if (![self isInFullSizeMode]) 
+
+    if (![self isInFullSizeMode])
     {
         alpha = MAX(0, alpha);
         alpha = MIN(1, alpha);
-        
+
         self.fullSizeView.alpha = alpha;
-        self.contentView.alpha  = 1.4 - alpha;
+        self.contentView.alpha = 1.4 - alpha;
     }
 }
 

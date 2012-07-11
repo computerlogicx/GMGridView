@@ -17,17 +17,19 @@
 {
     __gm_weak GMGridView *_gmGridView1;
     __gm_weak GMGridView *_gmGridView2;
-    
+
     __gm_weak UIButton *_buttonOptionsGrid1;
     __gm_weak UIButton *_buttonOptionsGrid2;
-    
+
     UIPopoverController *_popOverController;
     UIViewController *_optionsController1;
     UIViewController *_optionsController2;
 }
 
 - (void)computeViewFrames;
+
 - (void)showOptionsFromButton:(UIButton *)button;
+
 - (void)optionsDoneAction;
 
 @end
@@ -43,7 +45,7 @@
 
 - (id)init
 {
-    if ((self = [super init])) 
+    if ((self = [super init]))
     {
         self.title = @"Demo 2";
     }
@@ -68,7 +70,7 @@
     gmGridView.layoutStrategy = [GMGridViewLayoutStrategyFactory strategyFromType:GMGridViewLayoutVertical];
     [self.view addSubview:gmGridView];
     _gmGridView1 = gmGridView;
-    
+
     GMGridView *gmGridView2 = [[GMGridView alloc] initWithFrame:self.view.bounds];
     gmGridView2.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     gmGridView2.style = GMGridViewStylePush;
@@ -78,7 +80,7 @@
     gmGridView2.layoutStrategy = [GMGridViewLayoutStrategyFactory strategyFromType:GMGridViewLayoutHorizontal];
     [self.view addSubview:gmGridView2];
     _gmGridView2 = gmGridView2;
-    
+
     _buttonOptionsGrid1 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [_buttonOptionsGrid1 setTitle:@"Options Grid1" forState:UIControlStateNormal];
     [_buttonOptionsGrid1 setReversesTitleShadowWhenHighlighted:YES];
@@ -86,7 +88,7 @@
     _buttonOptionsGrid1.frame = CGRectMake(0, 0, _buttonOptionsGrid1.frame.size.width + 10, _buttonOptionsGrid1.frame.size.height + 10);
     [_buttonOptionsGrid1 addTarget:self action:@selector(showOptionsFromButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_buttonOptionsGrid1];
-    
+
     _buttonOptionsGrid2 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [_buttonOptionsGrid2 setTitle:@"Options Grid2" forState:UIControlStateNormal];
     [_buttonOptionsGrid2 setReversesTitleShadowWhenHighlighted:YES];
@@ -94,7 +96,7 @@
     _buttonOptionsGrid2.frame = CGRectMake(0, 0, _buttonOptionsGrid2.frame.size.width + 10, _buttonOptionsGrid2.frame.size.height + 10);
     [_buttonOptionsGrid2 addTarget:self action:@selector(showOptionsFromButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_buttonOptionsGrid2];
-    
+
     [self computeViewFrames];
 }
 
@@ -106,34 +108,34 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    _gmGridView1.sortingDelegate   = self;
+
+    _gmGridView1.sortingDelegate = self;
     _gmGridView1.transformDelegate = self;
     _gmGridView1.dataSource = self;
-    
-    _gmGridView2.sortingDelegate   = self;
+
+    _gmGridView2.sortingDelegate = self;
     _gmGridView2.transformDelegate = self;
     _gmGridView2.dataSource = self;
-    
+
     _gmGridView1.mainSuperView = self.view;
     _gmGridView2.mainSuperView = self.view;
-    
-    
+
+
     OptionsViewController *optionsController = [[OptionsViewController alloc] init];
     optionsController.gridView = _gmGridView1;
     optionsController.contentSizeForViewInPopover = CGSizeMake(400, 500);
     _optionsController1 = [[UINavigationController alloc] initWithRootViewController:optionsController];
-    
+
     OptionsViewController *optionsController2 = [[OptionsViewController alloc] init];
     optionsController2.gridView = _gmGridView2;
     optionsController2.contentSizeForViewInPopover = CGSizeMake(400, 500);
     _optionsController2 = [[UINavigationController alloc] initWithRootViewController:optionsController2];
-    
+
     if (INTERFACE_IS_PHONE)
     {
         UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(optionsDoneAction)];
         optionsController.navigationItem.rightBarButtonItem = doneButton;
-        
+
         UIBarButtonItem *doneButton2 = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(optionsDoneAction)];
         optionsController2.navigationItem.rightBarButtonItem = doneButton2;
     }
@@ -165,41 +167,41 @@
 - (void)computeViewFrames
 {
     CGSize itemSize = [self GMGridView:_gmGridView1 sizeForItemsInInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
-    
-    CGSize minSize  = CGSizeMake(itemSize.width  + _gmGridView1.minEdgeInsets.right + _gmGridView1.minEdgeInsets.left, 
-                                 itemSize.height + _gmGridView1.minEdgeInsets.top   + _gmGridView1.minEdgeInsets.bottom);
-    
-    
+
+    CGSize minSize = CGSizeMake(itemSize.width + _gmGridView1.minEdgeInsets.right + _gmGridView1.minEdgeInsets.left,
+            itemSize.height + _gmGridView1.minEdgeInsets.top + _gmGridView1.minEdgeInsets.bottom);
+
+
     CGRect frame1 = CGRectMake(10, 10, minSize.width, self.view.bounds.size.height - minSize.height - 30);
-    CGRect frame2 = CGRectMake(10, frame1.size.height + 20, self.view.bounds.size.width - 20 , minSize.height);
-    
+    CGRect frame2 = CGRectMake(10, frame1.size.height + 20, self.view.bounds.size.width - 20, minSize.height);
+
     _gmGridView1.frame = frame1;
     _gmGridView2.frame = frame2;
-    
-    _buttonOptionsGrid1.frame = CGRectMake(frame1.origin.x + frame1.size.width + 5, 
-                                           frame1.origin.y, 
-                                           _buttonOptionsGrid1.frame.size.width, 
-                                           _buttonOptionsGrid1.frame.size.height);
-    
-    _buttonOptionsGrid2.frame = CGRectMake(frame2.origin.x + frame2.size.width - _buttonOptionsGrid2.frame.size.width, 
-                                           frame2.origin.y - _buttonOptionsGrid2.frame.size.height - 5, 
-                                           _buttonOptionsGrid2.frame.size.width, 
-                                           _buttonOptionsGrid2.frame.size.height);
-    
-    
+
+    _buttonOptionsGrid1.frame = CGRectMake(frame1.origin.x + frame1.size.width + 5,
+            frame1.origin.y,
+            _buttonOptionsGrid1.frame.size.width,
+            _buttonOptionsGrid1.frame.size.height);
+
+    _buttonOptionsGrid2.frame = CGRectMake(frame2.origin.x + frame2.size.width - _buttonOptionsGrid2.frame.size.width,
+            frame2.origin.y - _buttonOptionsGrid2.frame.size.height - 5,
+            _buttonOptionsGrid2.frame.size.width,
+            _buttonOptionsGrid2.frame.size.height);
+
+
 }
 
 - (void)showOptionsFromButton:(UIButton *)button
 {
     UIViewController *optionsControllerToShow = button == _buttonOptionsGrid1 ? _optionsController1 : _optionsController2;
-    
+
     if (INTERFACE_IS_PHONE)
     {
         [self presentModalViewController:_optionsController1 animated:YES];
     }
     else
     {
-        if(![_popOverController isPopoverVisible])
+        if (![_popOverController isPopoverVisible])
         {
             _popOverController = [[UIPopoverController alloc] initWithContentViewController:optionsControllerToShow];
             [_popOverController presentPopoverFromRect:button.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
@@ -235,7 +237,7 @@
 
 - (CGSize)GMGridView:(GMGridView *)gridView sizeForItemsInInterfaceOrientation:(UIInterfaceOrientation)orientation
 {
-    if (INTERFACE_IS_PHONE) 
+    if (INTERFACE_IS_PHONE)
     {
         return CGSizeMake(140, 110);
     }
@@ -248,13 +250,13 @@
 - (GMGridViewCell *)GMGridView:(GMGridView *)gridView cellForItemAtIndex:(NSInteger)index
 {
     CGSize size = [self GMGridView:gridView sizeForItemsInInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
-    
+
     GMGridViewCell *cell = [gridView dequeueReusableCell];
-    
-    if (!cell) 
+
+    if (!cell)
     {
         cell = [[GMGridViewCell alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
-        
+
         UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
         view.backgroundColor = (gridView == _gmGridView1) ? [UIColor purpleColor] : [UIColor greenColor];
         view.layer.masksToBounds = NO;
@@ -263,12 +265,12 @@
         view.layer.shadowOffset = CGSizeMake(5, 5);
         view.layer.shadowPath = [UIBezierPath bezierPathWithRect:view.bounds].CGPath;
         view.layer.shadowRadius = 8;
-        
+
         cell.contentView = view;
     }
-    
+
     [[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    
+
     UILabel *label = [[UILabel alloc] initWithFrame:cell.contentView.bounds];
     label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     label.text = [NSString stringWithFormat:@"%d", index];
@@ -277,7 +279,7 @@
     label.textColor = [UIColor blackColor];
     label.font = [UIFont boldSystemFontOfSize:20];
     [cell.contentView addSubview:label];
-    
+
     return cell;
 }
 
@@ -288,28 +290,28 @@
 
 - (void)GMGridView:(GMGridView *)gridView didStartMovingCell:(GMGridViewCell *)cell
 {
-    [UIView animateWithDuration:0.3 
-                          delay:0 
-                        options:UIViewAnimationOptionAllowUserInteraction 
-                     animations:^{
+    [UIView animateWithDuration:0.3
+                          delay:0
+                        options:UIViewAnimationOptionAllowUserInteraction
+                     animations:^
+                     {
                          cell.contentView.backgroundColor = [UIColor orangeColor];
                          cell.contentView.layer.shadowOpacity = 0.7;
-                     } 
-                     completion:nil
-     ];
+                     }
+            completion:nil];
 }
 
 - (void)GMGridView:(GMGridView *)gridView didEndMovingCell:(GMGridViewCell *)cell
 {
-    [UIView animateWithDuration:0.3 
-                          delay:0 
-                        options:UIViewAnimationOptionAllowUserInteraction 
-                     animations:^{  
+    [UIView animateWithDuration:0.3
+                          delay:0
+                        options:UIViewAnimationOptionAllowUserInteraction
+                     animations:^
+                     {
                          cell.contentView.backgroundColor = (gridView == _gmGridView1) ? [UIColor purpleColor] : [UIColor greenColor];
                          cell.contentView.layer.shadowOpacity = 0;
                      }
-                     completion:nil
-     ];
+            completion:nil];
 }
 
 - (BOOL)GMGridView:(GMGridView *)gridView shouldAllowShakingBehaviorWhenMovingCell:(GMGridViewCell *)cell atIndex:(NSInteger)index
@@ -344,17 +346,17 @@
     fullView.backgroundColor = [UIColor yellowColor];
     fullView.layer.masksToBounds = NO;
     fullView.layer.cornerRadius = 8;
-    
+
     CGSize size = [self GMGridView:gridView sizeInFullSizeForCell:cell atIndex:index inInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
     fullView.bounds = CGRectMake(0, 0, size.width, size.height);
-    
+
     UILabel *label = [[UILabel alloc] initWithFrame:fullView.bounds];
     label.text = [NSString stringWithFormat:@"Fullscreen View for cell at index %d", index];
     label.textAlignment = UITextAlignmentCenter;
     label.backgroundColor = [UIColor clearColor];
     label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
-    if (INTERFACE_IS_PHONE) 
+
+    if (INTERFACE_IS_PHONE)
     {
         label.font = [UIFont boldSystemFontOfSize:15];
     }
@@ -362,40 +364,42 @@
     {
         label.font = [UIFont boldSystemFontOfSize:20];
     }
-    
+
     [fullView addSubview:label];
-    
-    
+
+
     return fullView;
 }
 
 - (void)GMGridView:(GMGridView *)gridView didStartTransformingCell:(GMGridViewCell *)cell
 {
-    [UIView animateWithDuration:0.5 
-                          delay:0 
-                        options:UIViewAnimationOptionAllowUserInteraction 
-                     animations:^{
+    [UIView animateWithDuration:0.5
+                          delay:0
+                        options:UIViewAnimationOptionAllowUserInteraction
+                     animations:^
+                     {
                          cell.contentView.backgroundColor = [UIColor blueColor];
                          cell.contentView.layer.shadowOpacity = 0.7;
-                     } 
-                     completion:nil];
+                     }
+            completion:nil];
 }
 
 - (void)GMGridView:(GMGridView *)gridView didEndTransformingCell:(GMGridViewCell *)cell
 {
-    [UIView animateWithDuration:0.5 
-                          delay:0 
-                        options:UIViewAnimationOptionAllowUserInteraction 
-                     animations:^{
+    [UIView animateWithDuration:0.5
+                          delay:0
+                        options:UIViewAnimationOptionAllowUserInteraction
+                     animations:^
+                     {
                          cell.contentView.backgroundColor = (gridView == _gmGridView1) ? [UIColor purpleColor] : [UIColor greenColor];
                          cell.contentView.layer.shadowOpacity = 0;
-                     } 
-                     completion:nil];
+                     }
+            completion:nil];
 }
 
 - (void)GMGridView:(GMGridView *)gridView didEnterFullSizeForCell:(GMGridViewCell *)cell
 {
-    
+
 }
 
 

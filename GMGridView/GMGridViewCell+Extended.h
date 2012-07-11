@@ -31,13 +31,13 @@
 #import "GMGridView.h"
 #import "GMGridViewCell.h"
 
-typedef void (^GMGridViewCellDeleteBlock)(GMGridViewCell*);
+typedef void (^GMGridViewCellDeleteBlock)(GMGridViewCell *);
 
 //////////////////////////////////////////////////////////////
 #pragma mark - Interface GMGridViewCell (Extended)
 //////////////////////////////////////////////////////////////
 
-@interface GMGridViewCell () 
+@interface GMGridViewCell ()
 
 @property (nonatomic, strong) UIView *fullSizeView;
 @property (nonatomic, assign) CGSize fullSize;
@@ -46,6 +46,7 @@ typedef void (^GMGridViewCellDeleteBlock)(GMGridViewCell*);
 @property (nonatomic, readonly, getter=isInFullSizeMode) BOOL inFullSizeMode;
 
 @property (nonatomic, getter=isEditing) BOOL editing;
+
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated;
 
 @property (nonatomic, copy) GMGridViewCellDeleteBlock deleteBlock;
@@ -54,9 +55,11 @@ typedef void (^GMGridViewCellDeleteBlock)(GMGridViewCell*);
 @property (nonatomic, gm_weak) UIButton *deleteButton;
 
 - (void)prepareForReuse;
+
 - (void)shake:(BOOL)on; // shakes the contentView only, not the fullsize one
 
 - (void)switchToFullSizeMode:(BOOL)fullSizeEnabled;
+
 - (void)stepToFullsizeWithAlpha:(CGFloat)alpha; // not supported yet
 
 @end
